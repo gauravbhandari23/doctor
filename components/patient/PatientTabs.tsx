@@ -1,9 +1,17 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { View, Text, Button } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { View, Text, Button, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import HomeScreen from './HomeScreen';
+import SearchBookDoctorScreen from './SearchBookDoctorScreen';
+import MyAppointmentsScreen from './MyAppointmentsScreen';
+import ProfileManagementScreen from './ProfileManagementScreen';
+import NotificationsScreen from './NotificationsScreen';
 
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 function PatientProfileScreen({ navigation }: any) {
   return (
@@ -52,27 +60,49 @@ function AppointmentDetailsScreen(props: any) {
   );
 }
 
-export default function PatientNavigation({ onLogout }: { onLogout: () => void }) {
-  const handleLogout = async (navigation: any) => {
-    await AsyncStorage.clear(); // Clear all stored tokens and session data
-    navigation.replace('Login'); // Navigate back to the login screen
+export default function PatientTabs({ navigation }: any) {
+  const handleLogout = () => {
+    navigation.replace('Login');
   };
 
+  const screenOptions = ({ route }: any) => ({
+    headerRight: () => (
+      <TouchableOpacity onPress={handleLogout} style={{ marginRight: 16 }}>
+        <MaterialCommunityIcons name="logout" size={24} color="#d00" />
+      </TouchableOpacity>
+    ),
+    tabBarIcon: ({ color, size }: any) => {
+      let iconName = '';
+      switch (route.name) {
+        case 'Home':
+          iconName = 'home-outline';
+          break;
+        case 'Search & Book Doctor':
+          iconName = 'magnify';
+          break;
+        case 'My Appointments':
+          iconName = 'calendar-check-outline';
+          break;
+        case 'Profile':
+          iconName = 'account-circle-outline';
+          break;
+        case 'Notifications':
+          iconName = 'bell-outline';
+          break;
+        default:
+          iconName = 'circle-outline';
+      }
+      return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
+    },
+  });
+
   return (
-    <Stack.Navigator initialRouteName="PatientProfile">
-      <Stack.Screen 
-        name="PatientProfile" 
-        component={PatientProfileScreen} 
-        options={({ navigation }) => ({ 
-          title: 'Profile', 
-          headerRight: () => (
-            <Button title="Logout" onPress={() => handleLogout(navigation)} color="#d00" />
-          ),
-        })} 
-      />
-      <Stack.Screen name="DoctorSearch" component={DoctorSearchScreen} options={{ title: 'Doctor Search' }} />
-      <Stack.Screen name="BookingHistory" component={BookingHistoryScreen} options={{ title: 'Booking History' }} />
-      <Stack.Screen name="AppointmentDetails" component={AppointmentDetailsScreen} options={{ title: 'Appointment Details' }} />
-    </Stack.Navigator>
+    <Tab.Navigator initialRouteName="Home" screenOptions={screenOptions}>
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Search & Book Doctor" component={SearchBookDoctorScreen} />
+      <Tab.Screen name="My Appointments" component={MyAppointmentsScreen} />
+      <Tab.Screen name="Profile" component={ProfileManagementScreen} />
+      <Tab.Screen name="Notifications" component={NotificationsScreen} />
+    </Tab.Navigator>
   );
 }

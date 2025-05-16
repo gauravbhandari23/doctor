@@ -6,7 +6,7 @@ import SplashScreen from './components/SplashScreen';
 import OnboardingScreen from './components/OnboardingScreen';
 import SignUpScreen from './components/SignUpScreen';
 import LoginScreen from './components/LoginScreen';
-import PatientNavigation from './components/patient/PatientNavigation';
+import PatientNavigation from './components/patient/PatientTabs';
 import DoctorTabs from './components/doctor/DoctorTabs';
 
 const Stack = createStackNavigator();
