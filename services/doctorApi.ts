@@ -111,3 +111,23 @@ export async function fetchDoctorAppointments() {
   if (!res.ok) throw new Error('Failed to fetch appointments');
   return await res.json();
 }
+
+export async function createAppointment(appointmentData: any) {
+  const token = await AsyncStorage.getItem('access');
+  if (!token) {
+    throw new Error('Authentication token is missing. Please log in again.');
+  }
+  const res = await fetch(`${API_BASE}/appointments/`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(appointmentData),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.detail || 'Failed to create appointment');
+  }
+  return data;
+}
