@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { API_BASE } from '../../services/apiConfig';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Modal, TextInput, Alert } from 'react-native';
 import { fetchDoctorAppointments, createAppointment, fetchDoctorAvailability } from '../../services/doctorApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -48,7 +49,7 @@ export default function MyAppointmentsScreen() {
           try {
             setLoading(true);
             const token = await AsyncStorage.getItem('access');
-            const res = await fetch(`http://10.0.2.2:8000/api/appointments/${appointment.id}/`, {
+            const res = await fetch(`${API_BASE}/appointments/${appointment.id}/`, {
               method: 'PATCH',
               headers: {
                 'Authorization': `Bearer ${token}`,
@@ -103,7 +104,7 @@ export default function MyAppointmentsScreen() {
       const body: any = { severity: editSeverity, symptoms: editSymptoms };
       if (editDate) body.date = editDate.toISOString().slice(0, 10);
       if (editTime) body.time = editTime.toTimeString().slice(0, 8);
-      const res = await fetch(`http://10.0.2.2:8000/api/appointments/${selectedAppointment.id}/`, {
+      const res = await fetch(`${API_BASE}/appointments/${selectedAppointment.id}/`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -166,7 +167,7 @@ export default function MyAppointmentsScreen() {
         renderItem={({ item }) => (
           <View style={styles.card}>
             <Text style={styles.label}>Doctor:</Text>
-            <Text style={styles.value}>{item.doctor_name || item.doctor}</Text>
+            <Text style={styles.value}>{item.doctor_name}</Text>
             <Text style={styles.label}>Date:</Text>
             <Text style={styles.value}>{item.date}</Text>
             <Text style={styles.label}>Time:</Text>

@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const API_BASE = 'http://10.0.2.2:8000/api'; // Change to your backend URL if needed
+import { API_BASE } from './apiConfig';
 
 export async function fetchDoctorProfile() {
   const token = await AsyncStorage.getItem('access');
@@ -29,7 +28,7 @@ export async function updateDoctorProfile(profileId: number, updates: any) {
     payload.user_phone = updates.phone;
     delete payload.phone;
   }
-  const res = await fetch(`${API_BASE}/doctors/${profileId}/`, { // Added trailing slash
+  const res = await fetch(`${API_BASE}/doctors/${profileId}/`, {
     method: 'PATCH',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -130,4 +129,24 @@ export async function createAppointment(appointmentData: any) {
     throw new Error(data.detail || 'Failed to create appointment');
   }
   return data;
+}
+
+export async function cancelAppointment(appointmentId: string) {
+  const token = await AsyncStorage.getItem('access');
+  if (!token) {
+    throw new Error('Authentication token is missing. Please log in again.');
+  }
+  const res = await fetch(`${API_BASE}/appointments/${appointmentId}/`, {
+    method: 'PATCH',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ status: 'canceled' }),
+  });
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.detail || 'Failed to cancel appointment');
+  }
+  return await res.json();
 }

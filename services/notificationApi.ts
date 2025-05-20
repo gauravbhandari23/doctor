@@ -1,6 +1,5 @@
+import { API_BASE } from './apiConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const API_BASE = 'http://10.0.2.2:8000/api';
 
 export async function fetchNotifications() {
   const token = await AsyncStorage.getItem('access');

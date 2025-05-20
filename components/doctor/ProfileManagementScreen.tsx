@@ -19,7 +19,7 @@ export default function ProfileManagementScreen() {
         console.log("Fetched Profile:", fetchedProfile);
         setProfile(fetchedProfile);
         setForm({
-          name: fetchedProfile.user_username,
+          full_name: fetchedProfile.user_full_name,
           email: fetchedProfile.user_email,
           phone: fetchedProfile.user_phone,
           specialty: fetchedProfile.specialty,
@@ -108,7 +108,7 @@ export default function ProfileManagementScreen() {
               </View>
             )}
           </TouchableOpacity>
-          <Text style={styles.name}>{form.name}</Text>
+          <Text style={styles.name}>{form.full_name}</Text>
           <Text style={styles.email}>{form.email}</Text>
 
           {/* Field: Phone */}

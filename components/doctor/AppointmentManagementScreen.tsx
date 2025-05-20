@@ -31,7 +31,7 @@ export default function AppointmentManagementScreen() {
       setLoading(true);
       setMessage('');
       const token = await AsyncStorage.getItem('access');
-      const res = await fetch(`http://10.0.2.2:8000/api/appointments/${appointment.id}/`, {
+      const res = await fetch(`${require('../../services/apiConfig').API_BASE}/appointments/${appointment.id}/`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,

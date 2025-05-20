@@ -1,11 +1,10 @@
 import axios from 'axios';
-
-const API_BASE = 'http://10.0.2.2:8000/api';
+import { API_BASE } from './apiConfig';
 
 export async function registerUser({ fullName, phoneNumber, email, password, role }: { fullName: string, phoneNumber: string, email: string, password: string, role: string }) {
   const res = await axios.post(`${API_BASE}/register/`, {
     email,
-    username: fullName,
+    full_name: fullName,
     phone: phoneNumber,
     user_type: role,
     password,

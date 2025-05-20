@@ -61,16 +61,8 @@ function AppointmentDetailsScreen(props: any) {
 }
 
 export default function PatientTabs({ navigation }: any) {
-  const handleLogout = () => {
-    navigation.replace('Login');
-  };
-
   const screenOptions = ({ route }: any) => ({
-    headerRight: () => (
-      <TouchableOpacity onPress={handleLogout} style={{ marginRight: 16 }}>
-        <MaterialCommunityIcons name="logout" size={24} color="#d00" />
-      </TouchableOpacity>
-    ),
+    headerShown: false,
     tabBarIcon: ({ color, size }: any) => {
       let iconName = '';
       switch (route.name) {
@@ -101,7 +93,9 @@ export default function PatientTabs({ navigation }: any) {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Search & Book Doctor" component={SearchBookDoctorScreen} />
       <Tab.Screen name="My Appointments" component={MyAppointmentsScreen} />
-      <Tab.Screen name="Profile" component={ProfileManagementScreen} />
+      <Tab.Screen name="Profile">
+        {props => <ProfileManagementScreen {...props} />}
+      </Tab.Screen>
       <Tab.Screen name="Notifications" component={NotificationsScreen} />
     </Tab.Navigator>
   );

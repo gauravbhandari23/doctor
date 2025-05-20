@@ -26,7 +26,7 @@ export default function SearchBookDoctorScreen() {
       setError('');
       try {
         const token = await AsyncStorage.getItem('access');
-        const res = await fetch('http://10.0.2.2:8000/api/doctors/', {
+        const res = await fetch(`${require('../../services/apiConfig').API_BASE}/doctors/`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ export default function SearchBookDoctorScreen() {
         keyExtractor={item => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.doctorCard}>
-            <Text style={styles.doctorName}>{item.user_username || item.user?.username || 'Doctor'}</Text>
+            <Text style={styles.doctorName}>{item.user_full_name}</Text>
             <Text>Specialty: {item.specialty}</Text>
             <Text>Location: {item.clinic_location}</Text>
             <TouchableOpacity style={styles.bookButton} onPress={() => handleBookClick(item)}>
@@ -137,7 +137,7 @@ export default function SearchBookDoctorScreen() {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.title}>Book Appointment with {selectedDoctor?.user_username || selectedDoctor?.user?.username}</Text>
+            <Text style={styles.title}>Book Appointment with {selectedDoctor?.user_full_name}</Text>
             {bookingLoading ? (
               <ActivityIndicator size="large" />
             ) : (

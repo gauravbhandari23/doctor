@@ -51,7 +51,7 @@ export default function PatientRecordsScreen() {
     setPatientProfile(null);
     try {
       const token = await AsyncStorage.getItem('access');
-      const res = await fetch(`http://10.0.2.2:8000/api/patients/by-user/?user_id=${patient.id}`, {
+      const res = await fetch(`${require('../../services/apiConfig').API_BASE}/patients/by-user/?user_id=${patient.id}`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
       if (res.ok) {
@@ -113,7 +113,7 @@ export default function PatientRecordsScreen() {
               <>
                 <Text style={styles.sectionHeader}>Basic Info</Text>
                 <Text style={styles.label}>Name:</Text>
-                <Text style={styles.value}>{patientProfile.username || selectedPatient.name}</Text>
+                <Text style={styles.value}>{patientProfile.full_name || selectedPatient.name}</Text>
                 <Text style={styles.label}>Email:</Text>
                 <Text style={styles.value}>{patientProfile.email || selectedPatient.email}</Text>
                 <Text style={styles.label}>Phone:</Text>

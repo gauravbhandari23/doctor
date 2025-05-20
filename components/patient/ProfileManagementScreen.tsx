@@ -15,12 +15,12 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Picker } from '@react-native-picker/picker';
 
-const API_BASE = 'http://10.0.2.2:8000/api';
+import { API_BASE } from '../../services/apiConfig';
 
-export default function ProfileManagementScreen() {
+export default function ProfileManagementScreen({ navigation }: any) {
   const [profile, setProfile] = useState({
     email: '',
-    username: '',
+    full_name: '',
     phone: '',
     medical_history: '',
     date_of_birth: '',
@@ -62,8 +62,8 @@ export default function ProfileManagementScreen() {
       newErrors.email = 'Invalid email address.';
     }
 
-    if (!profile.username.trim()) {
-      newErrors.username = 'Username is required.';
+    if (!profile.full_name.trim()) {
+      newErrors.full_name = 'Full name is required.';
     }
 
     if (!['Male', 'Female', 'Other'].includes(profile.gender)) {
@@ -149,13 +149,13 @@ export default function ProfileManagementScreen() {
         />
         {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
 
-        <Text style={styles.label}>Username:</Text>
+        <Text style={styles.label}>Full Name:</Text>
         <TextInput
-          style={[styles.input, errors.username && styles.errorInput]}
-          value={profile.username}
+          style={[styles.input, errors.full_name && styles.errorInput]}
+          value={profile.full_name}
           editable={false}
         />
-        {errors.username && <Text style={styles.errorText}>{errors.username}</Text>}
+        {errors.full_name && <Text style={styles.errorText}>{errors.full_name}</Text>}
 
         <Text style={styles.label}>Phone:</Text>
         <TextInput
@@ -271,11 +271,44 @@ export default function ProfileManagementScreen() {
         />
         {errors.blood_type && <Text style={styles.errorText}>{errors.blood_type}</Text>}
 
+
         {isEditing ? (
           <Button title="Save" onPress={handleSave} />
         ) : (
           <Button title="Edit" onPress={() => setIsEditing(true)} />
         )}
+
+        {/* Logout Button */}
+        <TouchableOpacity
+          style={{
+            backgroundColor: '#f44336',
+            borderRadius: 25,
+            paddingVertical: 12,
+            paddingHorizontal: 24,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 24,
+            shadowColor: '#f44336',
+            shadowOpacity: 0.3,
+            shadowRadius: 5,
+            shadowOffset: { width: 0, height: 2 },
+            elevation: 3,
+            minWidth: 140,
+          }}
+          onPress={async () => {
+            await AsyncStorage.removeItem('access');
+            await AsyncStorage.removeItem('refresh');
+            if (navigation && navigation.replace) {
+              navigation.replace('Login');
+            }
+          }}
+        >
+          <Icon name="sign-out" size={18} color="#fff" style={{ marginRight: 8 }} />
+          <Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>Logout</Text>
+        </TouchableOpacity>
+
+
       </View>
     </ScrollView>
   );
