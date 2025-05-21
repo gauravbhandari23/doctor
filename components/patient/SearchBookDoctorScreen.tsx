@@ -4,6 +4,8 @@ import { createAppointment, fetchDoctorProfile, fetchDoctorAvailability } from '
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
+import { LinearGradient } from 'expo-linear-gradient';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 export default function SearchBookDoctorScreen() {
   const [doctors, setDoctors] = useState<any[]>([]);
@@ -114,21 +116,36 @@ export default function SearchBookDoctorScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Book a Doctor</Text>
+      <LinearGradient
+        colors={['#1976d2', '#2196f3', '#64b5f6']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.headerGradient}
+      >
+        <View style={styles.headerContent}>
+          <FontAwesome5 name="heartbeat" size={40} color="#ffffff" style={styles.headerIcon} />
+          <Text style={styles.welcome}>Book a Doctor</Text>
+          <Text style={styles.subtitle}>Find and schedule your appointment</Text>
+        </View>
+      </LinearGradient>
+
       <FlatList
         data={doctors}
         keyExtractor={item => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.doctorCard}>
             <Text style={styles.doctorName}>{item.user_full_name}</Text>
-            <Text>Specialty: {item.specialty}</Text>
-            <Text>Location: {item.clinic_location}</Text>
+            <Text style={styles.doctorInfoText}>Specialty: {item.specialty}</Text>
+            <Text style={styles.doctorInfoText}>Location: {item.clinic_location}</Text>
+            <Text style={styles.doctorInfoText}>Rating: {item.rating !== undefined && item.rating !== null ? item.rating.toFixed(1) : 'N/A'} ({item.rating_count ?? 0} reviews)</Text>
             <TouchableOpacity style={styles.bookButton} onPress={() => handleBookClick(item)}>
               <Text style={styles.bookButtonText}>Book</Text>
             </TouchableOpacity>
           </View>
         )}
+        contentContainerStyle={styles.contentContainer}
       />
+
       <Modal
         visible={bookingModalVisible}
         animationType="slide"
@@ -209,10 +226,30 @@ export default function SearchBookDoctorScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
     backgroundColor: '#f5f6fa',
+  },
+  headerGradient: {
+    paddingTop: 60,
+    paddingBottom: 30,
+  },
+  headerContent: {
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  headerIcon: {
+    marginBottom: 15,
+  },
+  welcome: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#fff',
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#e1f5fe',
+    textAlign: 'center',
   },
   title: {
     fontSize: 22,
@@ -220,16 +257,29 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
   },
+  contentContainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 30,
+  },
   doctorCard: {
     backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-    width: 320,
+    borderRadius: 16,
+    paddingVertical: 22,
+    paddingHorizontal: 18,
+    marginBottom: 15,
     shadowColor: '#000',
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 5 },
+    elevation: 5,
+    borderWidth: 1,
+    borderColor: '#f0f0f0',
+    width: '100%',
+  },
+  doctorInfoText: {
+    fontSize: 14,
+    color: '#555',
+    marginBottom: 4,
   },
   doctorName: {
     fontSize: 18,
